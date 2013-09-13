@@ -1,0 +1,16 @@
+Recursive Categories module for OXID eShop 4.7.7 (and possibly other versions)
+
+!! Development version, don't use in production !!
+TODO: Bugfixing, check session filters (possibly won't work yet).
+
+This module changes the default OXID eShop behaviour to list products of a
+chosen category including the products in its subcategories.
+
+The module is based on ideas posted in the OXID Community Forum (german):
+http://forum.oxid-esales.com/showthread.php?t=16310
+
+Contributons welcomed. Send me an email if this module works for eShop versions
+not listed here.
+
+Author:
+Christian Neumann <cneumann@datenkarussell.de>
