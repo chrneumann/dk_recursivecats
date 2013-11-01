@@ -12,5 +12,7 @@ $aModule = array(
     'extend' => array(
         'alist' => 'dk_recursivecats/controllers/dk_recursivecats_alist',
         'oxarticlelist' => 'dk_recursivecats/models/dk_recursivecats_oxarticlelist',
+        'oxseoencoderarticle' =>
+            'dk_recursivecats/models/dk_recursivecats_oxseoencoderarticle',
     ),
 );

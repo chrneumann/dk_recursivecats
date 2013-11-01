@@ -43,6 +43,7 @@ extends dk_recursivecats_oxarticlelist_parent
                                           $iLimit = null )
   {
     $sArticleFields = $this->getBaseObject()->getSelectFields();
+    $sArticleFields .= ", `oxcatnid`";
 
     $sSelect = $this->_getCategoriesSelect( $sArticleFields, $aCatIds, $aSessionFilter );
 		
