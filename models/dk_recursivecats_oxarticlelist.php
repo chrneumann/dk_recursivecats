@@ -47,13 +47,8 @@ extends dk_recursivecats_oxarticlelist_parent
 
     $sSelect = $this->_getCategoriesSelect( $sArticleFields, $aCatIds, $aSessionFilter );
 		
-    // calc count - we can not use count($this) here as we might have paging enabled
-    // #1970C - if any filters are used, we can not use cached category article count
-    $iArticleCount = null;
-    if ( $aSessionFilter) {
-			$sCntSelect = $this->_getCategoriesCountSelect( $aCatIds, $aSessionFilter );
-      $iArticleCount = oxDb::getDb()->getOne( $sCntSelect );
-    }
+		$sCntSelect = $this->_getCategoriesCountSelect( $aCatIds, $aSessionFilter );
+    $iArticleCount = oxDb::getDb()->getOne( $sCntSelect );
 
     if ($iLimit = (int) $iLimit) {
       $sSelect .= " LIMIT $iLimit";
@@ -61,16 +56,7 @@ extends dk_recursivecats_oxarticlelist_parent
 
     $this->selectString( $sSelect );
 
-    if ( $iArticleCount !== null ) {
-      return $iArticleCount;
-    }
-
-    // this select is FAST so no need to hazzle here with getNrOfArticles()
-		$count = 0;
-		foreach ( $aCatIds as $sCatId ) {
-			$count += oxRegistry::get("oxUtilsCount")->getCatArticleCount( $sCatId );
-		}
-		return $count;
+    return $iArticleCount;
   }
 
   /**
@@ -113,7 +99,7 @@ extends dk_recursivecats_oxarticlelist_parent
     $sSelect = "SELECT $sFields FROM $sO2CView as oc left join $sArticleTable
                     ON $sArticleTable.oxid = oc.oxobjectid
                     WHERE ".$this->getBaseObject()->getSqlActiveSnippet()." and $sArticleTable.oxparentid = ''
-                    $sCategories $sFilterSql ORDER BY $sSorting oc.oxpos, oc.oxobjectid ";
+                    $sCategories $sFilterSql GROUP BY `oxid` ORDER BY $sSorting oc.oxpos, oc.oxobjectid ";
     return $sSelect;
   }
 
@@ -148,10 +134,10 @@ extends dk_recursivecats_oxarticlelist_parent
 		}
 		$sCategories .= ") ";
 
-    $sSelect = "SELECT COUNT(*) FROM $sO2CView as oc left join $sArticleTable
+    $sSelect = "SELECT COUNT(*) FROM (SELECT `oxobjectid` FROM $sO2CView as oc left join $sArticleTable
                     ON $sArticleTable.oxid = oc.oxobjectid
                     WHERE ".$this->getBaseObject()->getSqlActiveSnippet()." and $sArticleTable.oxparentid = ''
-                    $sCategories $sFilterSql ";
+                    $sCategories $sFilterSql GROUP BY `oxobjectid`) AS Z ";
 
     return $sSelect;
   }
