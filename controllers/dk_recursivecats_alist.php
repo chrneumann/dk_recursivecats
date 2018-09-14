@@ -1,7 +1,7 @@
 <?php
 /**
  *
- *    This file is part of Recursive Categories and contains code from OXID 
+ *    This file is part of Recursive Categories and contains code from OXID
  *    eShop Community Edition 4.7.7.
  *
  *    Copyright (c) 2013, Christian Neumann <cneumann@datenkarussell.de>
@@ -28,44 +28,44 @@
  */
 class dk_recursivecats_alist extends dk_recursivecats_alist_parent
 {
-	/**
-	 * Loads and returns article list of active category and its subcategories.
-	 *
-	 * @param string $oCategory category object
-	 *
-	 * @return array
-	 */
-	protected function _loadArticles( $oCategory )
-	{
-		$myConfig = $this->getConfig();
+    /**
+     * Loads and returns article list of active category and its subcategories.
+     *
+     * @param string $oCategory category object
+     *
+     * @return array
+     */
+    protected function _loadArticles($oCategory)
+    {
+        $myConfig = $this->getConfig();
 
-		$iNrofCatArticles = (int) $myConfig->getConfigParam( 'iNrofCatArticles' );
-		$iNrofCatArticles = $iNrofCatArticles?$iNrofCatArticles:1;
+        $iNrofCatArticles = (int) $myConfig->getConfigParam('iNrofCatArticles');
+        $iNrofCatArticles = $iNrofCatArticles?$iNrofCatArticles:1;
 
-		// load only articles which we show on screen
-		$oArtList = oxNew( 'oxarticlelist' );
-		$oArtList->setSqlLimit( $iNrofCatArticles * $this->_getRequestPageNr(), $iNrofCatArticles );
-		$oArtList->setCustomSorting( $this->getSortingSql( $this->getSortIdent() ) );
+        // load only articles which we show on screen
+        $oArtList = oxNew('oxarticlelist');
+        $oArtList->setSqlLimit($iNrofCatArticles * $this->_getRequestPageNr(), $iNrofCatArticles);
+        $oArtList->setCustomSorting($this->getSortingSql($this->getSortIdent()));
 
-		if ( $oCategory->isPriceCategory() ) {
-			$dPriceFrom = $oCategory->oxcategories__oxpricefrom->value;
-			$dPriceTo   = $oCategory->oxcategories__oxpriceto->value;
+        if ($oCategory->isPriceCategory()) {
+            $dPriceFrom = $oCategory->oxcategories__oxpricefrom->value;
+            $dPriceTo   = $oCategory->oxcategories__oxpriceto->value;
 
-			$this->_iAllArtCnt = $oArtList->loadPriceArticles( $dPriceFrom, $dPriceTo, $oCategory );
-		} else {
-			$aSessionFilter = oxSession::getVar( 'session_attrfilter' );
+            $this->_iAllArtCnt = $oArtList->loadPriceArticles($dPriceFrom, $dPriceTo, $oCategory);
+        } else {
+            $aSessionFilter = oxSession::getVariable('session_attrfilter');
 
-			$sActCat = oxConfig::getParameter( 'cnid' );
-			$aCatIds = array();
-			foreach ( $oCategory->getSubCats() as $oSubCat ) {
-				$aCatIds[] = $oSubCat->oxcategories__oxid->value;
-			}
-			$aCatIds[] = $sActCat;
-			$this->_iAllArtCnt = $oArtList->loadCategoriesArticles( $aCatIds, $aSessionFilter);
-		}
+            $sActCat = oxConfig::getConfigParam('cnid');
+            $aCatIds = array();
+            foreach ($oCategory->getSubCats() as $oSubCat) {
+                $aCatIds[] = $oSubCat->oxcategories__oxid->value;
+            }
+            $aCatIds[] = $sActCat;
+            $this->_iAllArtCnt = $oArtList->loadCategoriesArticles($aCatIds, $aSessionFilter);
+        }
 
-		$this->_iCntPages = round( $this->_iAllArtCnt/$iNrofCatArticles + 0.49 );
+        $this->_iCntPages = round($this->_iAllArtCnt/$iNrofCatArticles + 0.49);
 
-		return $oArtList;
-	}
+        return $oArtList;
+    }
 }
