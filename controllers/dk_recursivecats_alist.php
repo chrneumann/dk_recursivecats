@@ -55,7 +55,7 @@ class dk_recursivecats_alist extends dk_recursivecats_alist_parent
         } else {
             $aSessionFilter = oxSession::getVariable('session_attrfilter');
 
-            $sActCat = oxConfig::getConfigParam('cnid');
+            $sActCat = $oCategory->oxcategories__oxid->value;
             $aCatIds = array();
             foreach ($oCategory->getSubCats() as $oSubCat) {
                 $aCatIds[] = $oSubCat->oxcategories__oxid->value;
